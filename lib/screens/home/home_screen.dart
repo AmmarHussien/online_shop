@@ -1,8 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_vector_icons/flutter_vector_icons.dart';
-import 'package:online_shop/components/shared/product_card.dart';
+
 import 'package:online_shop/components/style/app_style.dart';
+import 'package:online_shop/models/sneaker_model.dart';
+import 'package:online_shop/services/helper.dart';
+
+import 'components/home_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,6 +18,31 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     length: 3,
     vsync: this,
   );
+
+  late Future<List<Sneakers>> _male;
+  late Future<List<Sneakers>> _female;
+  late Future<List<Sneakers>> _kids;
+
+  void getMale() {
+    _male = Helper().getMaleSneaker();
+  }
+
+  void getFemale() {
+    _female = Helper().getFemaleSneaker();
+  }
+
+  void getKids() {
+    _kids = Helper().getKidsSneaker();
+  }
+
+  @override
+  void initState() {
+    getMale();
+    getFemale();
+    getKids();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -110,128 +137,22 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 child: TabBarView(
                   controller: _tabController,
                   children: [
-                    Column(
-                      children: [
-                        SizedBox(
-                          height: size.height * 0.405,
-                          child: ListView.builder(
-                            itemCount: 6,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              return const ProductCard(
-                                price: '\$200',
-                                categoy: 'Sport',
-                                id: '1',
-                                name: 'Ammar Hussien',
-                                image:
-                                    "https://d326fntlu7tb1e.cloudfront.net/uploads/58282ea3-b815-4d26-9f4f-382aa62f67cf-HP5404_a1.webp",
-                              );
-                            },
-                          ),
-                        ),
-                        Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                12,
-                                20,
-                                12,
-                                20,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Latest Shoes',
-                                    style: appstyle(
-                                      24,
-                                      Colors.black,
-                                      FontWeight.bold,
-                                    ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'Show All',
-                                        style: appstyle(
-                                          22,
-                                          Colors.black,
-                                          FontWeight.w500,
-                                        ),
-                                      ),
-                                      const Icon(
-                                        AntDesign.caretright,
-                                        size: 20,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: size.height * 0.13,
-                          child: ListView.builder(
-                            itemCount: 6,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                        20,
-                                      ),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.white,
-                                        spreadRadius: 1,
-                                        blurRadius: 0.8,
-                                        offset: Offset(
-                                          0,
-                                          1,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  height: size.height * 0.12,
-                                  width: size.width * 0.28,
-                                  child: CachedNetworkImage(
-                                    imageUrl:
-                                        'https://d326fntlu7tb1e.cloudfront.net/uploads/710d020f-2da8-4e9e-8cff-0c8f24581488-GV6674.webp',
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
+                    HomeWidget(
+                      gender: _male,
+                      tabIndex: 0,
                     ),
-                    Column(
-                      children: [
-                        Container(
-                          height: size.height * 0.405,
-                          color: Colors.red,
-                        ),
-                      ],
+                    HomeWidget(
+                      gender: _female,
+                      tabIndex: 1,
                     ),
-                    Column(
-                      children: [
-                        Container(
-                          height: size.height * 0.405,
-                          color: Colors.green,
-                        ),
-                      ],
+                    HomeWidget(
+                      gender: _kids,
+                      tabIndex: 2,
                     ),
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
