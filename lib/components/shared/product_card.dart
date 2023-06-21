@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:online_shop/components/style/app_style.dart';
+import 'package:online_shop/controller/provider/favorites_provider.dart';
+import 'package:online_shop/screens/favorites/favorites_screen.dart';
+import 'package:provider/provider.dart';
 
 class ProductCard extends StatefulWidget {
   const ProductCard({
@@ -23,9 +26,21 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
-  bool isSelected = true;
+  //final _favBox = Hive.box('fav_box');
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    var favoritesNotifier = Provider.of<FavoritesNotifier>(
+      context,
+      listen: true,
+    );
+    favoritesNotifier.getFavorites();
+    bool isSelected = true;
     Size size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.fromLTRB(
@@ -75,9 +90,29 @@ class _ProductCardState extends State<ProductCard> {
                     right: 10,
                     top: 10,
                     child: GestureDetector(
-                      onTap: null,
-                      child: const Icon(
-                        MaterialCommunityIcons.heart_outline,
+                      onTap: () async {
+                        if (favoritesNotifier.ids.contains(widget.id)) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const Favorites(),
+                            ),
+                          );
+                        } else {
+                          favoritesNotifier.createFav({
+                            'id': widget.id,
+                            "name": widget.name,
+                            "category": widget.categoy,
+                            "price": widget.price,
+                            "imageUrl": widget.image
+                          });
+                        }
+                        setState(() {});
+                      },
+                      child: Icon(
+                        favoritesNotifier.ids.contains(widget.id)
+                            ? AntDesign.heart
+                            : AntDesign.hearto,
                       ),
                     ),
                   ),

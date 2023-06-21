@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:online_shop/controller/provider/cart_provider.dart';
+import 'package:online_shop/controller/provider/favorites_provider.dart';
 import 'package:online_shop/controller/provider/main_screen_provider.dart';
 import 'package:online_shop/controller/provider/product_provider.dart';
 import 'package:provider/provider.dart';
@@ -19,8 +21,14 @@ Future<void> main() async {
           create: (context) => MainScreenNotifier(),
         ),
         ChangeNotifierProvider(
+          create: (context) => CartNotifier(),
+        ),
+        ChangeNotifierProvider(
           create: (context) => ProductNotifier(),
-        )
+        ),
+        ChangeNotifierProvider(
+          create: (context) => FavoritesNotifier(),
+        ),
       ],
       child: const MyApp(),
     ),

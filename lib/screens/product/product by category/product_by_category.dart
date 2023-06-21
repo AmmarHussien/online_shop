@@ -46,7 +46,7 @@ class _ProductByCategoryState extends State<ProductByCategory>
   @override
   void initState() {
     super.initState();
-     _tabController.animateTo(widget.tabIndex, curve: Curves.easeIn);
+    _tabController.animateTo(widget.tabIndex, curve: Curves.easeIn);
     getMale();
     getFemale();
     getKids();
@@ -176,8 +176,8 @@ class _ProductByCategoryState extends State<ProductByCategory>
     );
   }
 
+  final double _value = 100;
   Future<dynamic> filer() {
-    double _value = 100;
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,

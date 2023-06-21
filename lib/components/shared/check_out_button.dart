@@ -5,10 +5,10 @@ class CheckOutButton extends StatelessWidget {
   const CheckOutButton({
     super.key,
     this.onTap,
-    required this.lable,
+    required this.label,
   });
   final void Function()? onTap;
-  final String lable;
+  final String label;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class CheckOutButton extends StatelessWidget {
           ),
           child: Center(
             child: Text(
-              lable,
+              label,
               style: appstyle(
                 20,
                 Colors.white,

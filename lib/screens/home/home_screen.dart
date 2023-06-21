@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:online_shop/components/style/app_style.dart';
-import 'package:online_shop/models/sneaker_model.dart';
-import 'package:online_shop/services/helper.dart';
-
+import 'package:online_shop/controller/provider/favorites_provider.dart';
+import 'package:online_shop/controller/provider/product_provider.dart';
+import 'package:provider/provider.dart';
 import 'components/home_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,32 +19,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     vsync: this,
   );
 
-  late Future<List<Sneakers>> _male;
-  late Future<List<Sneakers>> _female;
-  late Future<List<Sneakers>> _kids;
-
-  void getMale() {
-    _male = Helper().getMaleSneaker();
-  }
-
-  void getFemale() {
-    _female = Helper().getFemaleSneaker();
-  }
-
-  void getKids() {
-    _kids = Helper().getKidsSneaker();
-  }
-
-  @override
-  void initState() {
-    getMale();
-    getFemale();
-    getKids();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
+    var favoritesNotifier = Provider.of<FavoritesNotifier>(context);
+    var productNotifier = Provider.of<ProductNotifier>(context);
+
+    productNotifier.getMale();
+    productNotifier.getFemale();
+    productNotifier.getKids();
+    
+    favoritesNotifier.getFavorites();
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color(0xFFE2E2E2),
@@ -138,15 +122,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   controller: _tabController,
                   children: [
                     HomeWidget(
-                      gender: _male,
+                      gender: productNotifier.male,
                       tabIndex: 0,
                     ),
                     HomeWidget(
-                      gender: _female,
+                      gender: productNotifier.female,
                       tabIndex: 1,
                     ),
                     HomeWidget(
-                      gender: _kids,
+                      gender: productNotifier.kids,
                       tabIndex: 2,
                     ),
                   ],
